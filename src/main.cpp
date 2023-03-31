@@ -61,7 +61,7 @@ struct ProgramState {
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
     glm::vec3 backpackPosition = glm::vec3(0.0f);
-    float backpackScale = 1.0f;
+    float backpackScale = 15.0f;
     PointLight pointLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
@@ -171,10 +171,13 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    //----------------------------ODAVDE--------------------------------------------------------
+
     // build and compile shaders
     // -------------------------
     Shader ourShader("resources/shaders/model_shader.vs", "resources/shaders/model_shader.fs");
-    Shader kutijaShader("resources/shaders/kutija.vs", "resources/shaders/kutija.fs");
+    Shader kutijaShader("resources/shaders/providno.vs", "resources/shaders/providno.fs");
+    Shader novcicShader("resources/shaders/providno.vs", "resources/shaders/providno.fs");
     Shader skyboxShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
 
     float skyboxVertices[] = {
@@ -236,12 +239,12 @@ int main() {
       // load cubemap textures
       vector<std::string> faces
       {
-          FileSystem::getPath("resources/textures/skybox/browncloud_rt.jpg"),
-          FileSystem::getPath("resources/textures/skybox/browncloud_lf.jpg"),
-          FileSystem::getPath("resources/textures/skybox/browncloud_up.jpg"),
-          FileSystem::getPath("resources/textures/skybox/browncloud_dn.jpg"),
-          FileSystem::getPath("resources/textures/skybox/browncloud_ft.jpg"),
-          FileSystem::getPath("resources/textures/skybox/browncloud_bk.jpg")
+          FileSystem::getPath("resources/textures/skybox/0001.jpg"),
+          FileSystem::getPath("resources/textures/skybox/0002.jpg"),
+          FileSystem::getPath("resources/textures/skybox/0003.jpg"),
+          FileSystem::getPath("resources/textures/skybox/0004.jpg"),
+          FileSystem::getPath("resources/textures/skybox/0005.jpg"),
+          FileSystem::getPath("resources/textures/skybox/0006.jpg")
       };
 
       unsigned int cubemapTexture = loadCubemap(faces);
@@ -294,27 +297,29 @@ int main() {
     };
 
     // box VAO
-    unsigned int boxVBO, boxVAO;
+    unsigned int boxVAO, boxVBO;
     glGenVertexArrays(1, &boxVAO);
     glGenBuffers(1, &boxVBO);
-
+    glBindVertexArray(boxVAO);
     glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices, GL_STATIC_DRAW);
-
-    glBindVertexArray(boxVAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
-    // load box textures (blending)
+    // load textures
     stbi_set_flip_vertically_on_load(true);
-    unsigned int greenTexture = loadTexture(FileSystem::getPath("resources/textures/container.jpg").c_str());
+    unsigned int greenTexture = loadTexture(FileSystem::getPath("resources/textures/zeleno.png").c_str());
     kutijaShader.use();
     kutijaShader.setInt("texture1", 0);
+
+    novcicShader.use();
+    novcicShader.setInt("texture1", 0);
+
     stbi_set_flip_vertically_on_load(false);
+
+
 
     // load models
     // -----------
@@ -323,6 +328,8 @@ int main() {
 
     Model ostrvo("resources/objects/island/NO7JFUBPJ5S00T2J2UBYCE1F3.obj");
     ostrvo.SetShaderTextureNamePrefix("material.");
+
+    Model novcic("resources/objects/coin/20821_Cube_box_cover_v1.obj");
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -333,9 +340,6 @@ int main() {
     pointLight.constant = 1.0f;
     pointLight.linear = 0.09f;
     pointLight.quadratic = 0.032f;
-
-
-
 
 
     // draw in wireframe
@@ -377,31 +381,45 @@ int main() {
                                                 (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = programState->camera.GetViewMatrix();
 
-        ourShader.use();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
         // render the loaded models
 
+        // novcic
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, greenTexture);
+        novcicShader.use();
+        novcicShader.setMat4("projection", projection);
+        novcicShader.setMat4("view", view);
         glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, programState->backpackPosition);
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.0025f));
+        novcicShader.setMat4("model", model);
+        novcic.Draw(novcicShader);
+
+        // ostrvo
+        ourShader.use();
+        model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3 (0.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(1.0f));
         ourShader.setMat4("model", model);
         ostrvo.Draw(ourShader);
 
         // kutija
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, greenTexture);
-        kutijaShader.use();
-        kutijaShader.setMat4("projection", projection);
-        kutijaShader.setMat4("view", view);
-        glBindVertexArray(boxVAO);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.0f));
-        kutijaShader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+//        glActiveTexture(GL_TEXTURE0);
+//        glBindTexture(GL_TEXTURE_2D, greenTexture);
+//        kutijaShader.use();
+//        kutijaShader.setMat4("projection", projection);
+//        kutijaShader.setMat4("view", view);
+//        glBindVertexArray(boxVAO);
+//        model = glm::mat4(1.0f);
+//        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+//        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+//        model = glm::scale(model, glm::vec3(1.0f));
+//        kutijaShader.setMat4("model", model);
+//        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // draw skybox as last
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
