@@ -171,13 +171,10 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    //----------------------------ODAVDE--------------------------------------------------------
-
     // build and compile shaders
     // -------------------------
     Shader ourShader("resources/shaders/model_shader.vs", "resources/shaders/model_shader.fs");
     Shader kutijaShader("resources/shaders/providno.vs", "resources/shaders/providno.fs");
-    Shader novcicShader("resources/shaders/providno.vs", "resources/shaders/providno.fs");
     Shader skyboxShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
 
     float skyboxVertices[] = {
@@ -253,47 +250,47 @@ int main() {
 
     // kutija
     float boxVertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,0.0f,  0.0f,
+            0.5f, -0.5f, -0.5f,   1.0f,  0.0f,
+            0.5f,  0.5f, -0.5f,   1.0f,  1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
+            -0.5f,  0.5f, -0.5f, 0.0f,  1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
+            0.5f, -0.5f,  0.5f, 1.0f,  0.0f,
+            0.5f,  0.5f,  0.5f, 1.0f,  1.0f,
+            0.5f,  0.5f,  0.5f,  1.0f,  1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,
+            -0.5f, -0.5f,  0.5f,0.0f,  0.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f, 1.0f,  1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f,  1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f,  1.0f,
+            -0.5f, -0.5f,  0.5f, 0.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
+            0.5f,  0.5f, -0.5f, 1.0f,  1.0f,
+            0.5f, -0.5f, -0.5f, 0.0f,  1.0f,
+            0.5f, -0.5f, -0.5f, 0.0f,  1.0f,
+            0.5f, -0.5f,  0.5f, 0.0f,  0.0f,
+            0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  1.0f,
+            0.5f, -0.5f, -0.5f,  1.0f,  1.0f,
+            0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+            -0.5f,  0.5f, -0.5f, 0.0f,  1.0f,
+            0.5f,  0.5f, -0.5f, 1.0f,  1.0f,
+            0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
+            0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f, 0.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f, 0.0f,  1.0f
     };
 
     // box VAO
@@ -309,16 +306,9 @@ int main() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
     // load textures
-    stbi_set_flip_vertically_on_load(true);
-    unsigned int greenTexture = loadTexture(FileSystem::getPath("resources/textures/zeleno.png").c_str());
+    unsigned int greenTexture = loadTexture(FileSystem::getPath("resources/textures/zeleno_providno.png").c_str());
     kutijaShader.use();
     kutijaShader.setInt("texture1", 0);
-
-    novcicShader.use();
-    novcicShader.setInt("texture1", 0);
-
-    stbi_set_flip_vertically_on_load(false);
-
 
 
     // load models
@@ -328,8 +318,6 @@ int main() {
 
     Model ostrvo("resources/objects/island/NO7JFUBPJ5S00T2J2UBYCE1F3.obj");
     ostrvo.SetShaderTextureNamePrefix("material.");
-
-    Model novcic("resources/objects/coin/20821_Cube_box_cover_v1.obj");
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -386,40 +374,30 @@ int main() {
 
         // render the loaded models
 
-        // novcic
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, greenTexture);
-        novcicShader.use();
-        novcicShader.setMat4("projection", projection);
-        novcicShader.setMat4("view", view);
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, programState->backpackPosition);
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.0025f));
-        novcicShader.setMat4("model", model);
-        novcic.Draw(novcicShader);
-
         // ostrvo
         ourShader.use();
-        model = glm::mat4(1.0f);
+        glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3 (0.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.0f));
+        model = glm::scale(model, glm::vec3(2.0f));
         ourShader.setMat4("model", model);
         ostrvo.Draw(ourShader);
 
-        // kutija
-//        glActiveTexture(GL_TEXTURE0);
-//        glBindTexture(GL_TEXTURE_2D, greenTexture);
-//        kutijaShader.use();
-//        kutijaShader.setMat4("projection", projection);
-//        kutijaShader.setMat4("view", view);
-//        glBindVertexArray(boxVAO);
-//        model = glm::mat4(1.0f);
-//        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-//        model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-//        model = glm::scale(model, glm::vec3(1.0f));
-//        kutijaShader.setMat4("model", model);
-//        glDrawArrays(GL_TRIANGLES, 0, 36);
+        // providna kutija
+        glDisable(GL_CULL_FACE);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, greenTexture);
+        kutijaShader.use();
+        kutijaShader.setMat4("projection", projection);
+        kutijaShader.setMat4("view", view);
+        glBindVertexArray(boxVAO);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-0.3f, 0.0f, 0.2f));
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.2f));
+        kutijaShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glEnable(GL_CULL_FACE);
+
 
         // draw skybox as last
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -546,6 +524,11 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         } else {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
+    }
+    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+        cout << programState->camera.Position.x << " "
+             << programState->camera.Position.y << " "
+             << programState->camera.Position.z << '\n';
     }
 }
 
