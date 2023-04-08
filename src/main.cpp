@@ -24,6 +24,8 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
 void processInput(GLFWwindow *window);
 
+void setLights(Shader shaderName);
+
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 unsigned int loadCubemap(vector<std::string> faces);
@@ -44,16 +46,10 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-struct PointLight {
-    glm::vec3 position;
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
+// lightPos
+glm::vec3 lightPos(-3.0f, 1.5f, 3.5f);
 
-    float constant;
-    float linear;
-    float quadratic;
-};
+bool spotlight = false;
 
 struct ProgramState {
     glm::vec3 clearColor = glm::vec3(0);
@@ -63,6 +59,8 @@ struct ProgramState {
     glm::vec3 backpackPosition = glm::vec3(0.0f);
     float backpackScale = 15.0f;
     PointLight pointLight;
+    DirLight dirLight;
+    SpotLight spotLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
 
@@ -174,51 +172,52 @@ int main() {
     // build and compile shaders
     // -------------------------
     Shader ourShader("resources/shaders/model_shader.vs", "resources/shaders/model_shader.fs");
-    Shader kutijaShader("resources/shaders/providno.vs", "resources/shaders/providno.fs");
+    Shader providnoShader("resources/shaders/providno.vs", "resources/shaders/providno.fs");
     Shader skyboxShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
+    Shader boxShader("resources/shaders/kutija.vs", "resources/shaders/kutija.fs");
 
     float skyboxVertices[] = {
-          -1.0f,  1.0f, -1.0f,
-          -1.0f, -1.0f, -1.0f,
-           1.0f, -1.0f, -1.0f,
-           1.0f, -1.0f, -1.0f,
-           1.0f,  1.0f, -1.0f,
-          -1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+            -1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
+            1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
 
-          -1.0f, -1.0f,  1.0f,
-          -1.0f, -1.0f, -1.0f,
-          -1.0f,  1.0f, -1.0f,
-          -1.0f,  1.0f, -1.0f,
-          -1.0f,  1.0f,  1.0f,
-          -1.0f, -1.0f,  1.0f,
+            -1.0f, -1.0f,  1.0f,
+            -1.0f, -1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f,  1.0f,
+            -1.0f, -1.0f,  1.0f,
 
-           1.0f, -1.0f, -1.0f,
-           1.0f, -1.0f,  1.0f,
-           1.0f,  1.0f,  1.0f,
-           1.0f,  1.0f,  1.0f,
-           1.0f,  1.0f, -1.0f,
-           1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
 
-          -1.0f, -1.0f,  1.0f,
-          -1.0f,  1.0f,  1.0f,
-           1.0f,  1.0f,  1.0f,
-           1.0f,  1.0f,  1.0f,
-           1.0f, -1.0f,  1.0f,
-          -1.0f, -1.0f,  1.0f,
+            -1.0f, -1.0f,  1.0f,
+            -1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,
+            1.0f, -1.0f,  1.0f,
+            -1.0f, -1.0f,  1.0f,
 
-          -1.0f,  1.0f, -1.0f,
-           1.0f,  1.0f, -1.0f,
-           1.0f,  1.0f,  1.0f,
-           1.0f,  1.0f,  1.0f,
-          -1.0f,  1.0f,  1.0f,
-          -1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+            1.0f,  1.0f, -1.0f,
+            1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,
+            -1.0f,  1.0f,  1.0f,
+            -1.0f,  1.0f, -1.0f,
 
-          -1.0f, -1.0f, -1.0f,
-          -1.0f, -1.0f,  1.0f,
-           1.0f, -1.0f, -1.0f,
-           1.0f, -1.0f, -1.0f,
-          -1.0f, -1.0f,  1.0f,
-           1.0f, -1.0f,  1.0f
+            -1.0f, -1.0f, -1.0f,
+            -1.0f, -1.0f,  1.0f,
+            1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
+            -1.0f, -1.0f,  1.0f,
+            1.0f, -1.0f,  1.0f
       };
 
       // skybox VAO
@@ -250,66 +249,78 @@ int main() {
 
     // kutija
     float boxVertices[] = {
-            -0.5f, -0.5f, -0.5f,0.0f,  0.0f,
-            0.5f, -0.5f, -0.5f,   1.0f,  0.0f,
-            0.5f,  0.5f, -0.5f,   1.0f,  1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f,  1.0f,
-            -0.5f,  0.5f, -0.5f, 0.0f,  1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+            0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+            0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+            0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
-            0.5f, -0.5f,  0.5f, 1.0f,  0.0f,
-            0.5f,  0.5f,  0.5f, 1.0f,  1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f,  1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,
-            -0.5f, -0.5f,  0.5f,0.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+            0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-            -0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
-            -0.5f,  0.5f, -0.5f, 1.0f,  1.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f,  1.0f,
-            -0.5f, -0.5f, -0.5f, 0.0f,  1.0f,
-            -0.5f, -0.5f,  0.5f, 0.0f,  0.0f,
-            -0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-            0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
-            0.5f,  0.5f, -0.5f, 1.0f,  1.0f,
-            0.5f, -0.5f, -0.5f, 0.0f,  1.0f,
-            0.5f, -0.5f, -0.5f, 0.0f,  1.0f,
-            0.5f, -0.5f,  0.5f, 0.0f,  0.0f,
-            0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+            0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+            0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+            0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-            -0.5f, -0.5f, -0.5f,  0.0f,  1.0f,
-            0.5f, -0.5f, -0.5f,  1.0f,  1.0f,
-            0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f,  0.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f,  1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+            0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+            0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-            -0.5f,  0.5f, -0.5f, 0.0f,  1.0f,
-            0.5f,  0.5f, -0.5f, 1.0f,  1.0f,
-            0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
-            0.5f,  0.5f,  0.5f, 1.0f,  0.0f,
-            -0.5f,  0.5f,  0.5f, 0.0f,  0.0f,
-            -0.5f,  0.5f, -0.5f, 0.0f,  1.0f
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+            0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+            0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
     // box VAO
-    unsigned int boxVAO, boxVBO;
+    unsigned int boxVBO, boxVAO;
     glGenVertexArrays(1, &boxVAO);
     glGenBuffers(1, &boxVBO);
-    glBindVertexArray(boxVAO);
+
     glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(boxVertices), boxVertices, GL_STATIC_DRAW);
+
+    glBindVertexArray(boxVAO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     // load textures
     unsigned int greenTexture = loadTexture(FileSystem::getPath("resources/textures/zeleno_providno.png").c_str());
-    kutijaShader.use();
-    kutijaShader.setInt("texture1", 0);
+    unsigned int boxDif = loadTexture(FileSystem::getPath("resources/textures/metalDif.jpg").c_str());
+    unsigned int boxSpec = loadTexture(FileSystem::getPath("resources/textures/metalSpec.png").c_str());
+    unsigned int boxAmb = loadTexture(FileSystem::getPath("resources/textures/metalAmb.png").c_str());
 
+    providnoShader.use();
+    providnoShader.setInt("texture1", 0);
+
+    boxShader.use();
+    boxShader.setInt("material.ambient", 0);
+    boxShader.setInt("material.diffuse", 1);
+    boxShader.setInt("material.specular", 2);
 
     // load models
     // -----------
@@ -318,17 +329,6 @@ int main() {
 
     Model ostrvo("resources/objects/island/NO7JFUBPJ5S00T2J2UBYCE1F3.obj");
     ostrvo.SetShaderTextureNamePrefix("material.");
-
-    PointLight& pointLight = programState->pointLight;
-    pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
-    pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
-    pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
-    pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
-
-    pointLight.constant = 1.0f;
-    pointLight.linear = 0.09f;
-    pointLight.quadratic = 0.032f;
-
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -354,15 +354,7 @@ int main() {
 
         // don't forget to enable shader before setting uniforms
         ourShader.use();
-        pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
-        ourShader.setVec3("pointLight.position", pointLight.position);
-        ourShader.setVec3("pointLight.ambient", pointLight.ambient);
-        ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);
-        ourShader.setVec3("pointLight.specular", pointLight.specular);
-        ourShader.setFloat("pointLight.constant", pointLight.constant);
-        ourShader.setFloat("pointLight.linear", pointLight.linear);
-        ourShader.setFloat("pointLight.quadratic", pointLight.quadratic);
-        ourShader.setVec3("viewPosition", programState->camera.Position);
+        setLights(ourShader);
         ourShader.setFloat("material.shininess", 32.0f);
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
@@ -382,22 +374,42 @@ int main() {
         ourShader.setMat4("model", model);
         ostrvo.Draw(ourShader);
 
-        // providna kutija
+        // metalna kutija
         glDisable(GL_CULL_FACE);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, greenTexture);
-        kutijaShader.use();
-        kutijaShader.setMat4("projection", projection);
-        kutijaShader.setMat4("view", view);
+        glBindTexture(GL_TEXTURE_2D, boxDif);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, boxSpec);
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, boxAmb);
+
+        boxShader.use();
+        setLights(boxShader);
+        boxShader.setFloat("material.shininess", 64.0f);
+        boxShader.setMat4("projection", projection);
+        boxShader.setMat4("view", view);
         glBindVertexArray(boxVAO);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-0.3f, 0.0f, 0.2f));
-        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(-0.28f, -0.62f, -1.8f));
+        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(0.2f));
-        kutijaShader.setMat4("model", model);
+        boxShader.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        // providna kutija
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, greenTexture);
+        providnoShader.use();
+        providnoShader.setMat4("projection", projection);
+        providnoShader.setMat4("view", view);
+        glBindVertexArray(boxVAO);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f));
+        //model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(5.2f));
+        providnoShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glEnable(GL_CULL_FACE);
-
 
         // draw skybox as last
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -530,6 +542,9 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
              << programState->camera.Position.y << " "
              << programState->camera.Position.z << '\n';
     }
+
+    if (key == GLFW_KEY_F && action == GLFW_PRESS)
+        spotlight = !spotlight;
 }
 
 unsigned int loadTexture(char const * path)
@@ -597,4 +612,41 @@ unsigned int loadCubemap(vector<std::string> faces)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     return textureID;
+}
+
+void setLights(Shader shaderName){
+    shaderName.setVec3("light.position", lightPos);
+    shaderName.setVec3("viewPos", programState->camera.Position);
+
+    // directional light
+    shaderName.setVec3("dirLight.direction", 0.0f, -1.0, 0.0f);
+    shaderName.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+    shaderName.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+    shaderName.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+    //pointlight properties
+    shaderName.setVec3("pointLights[0].position", lightPos);
+    shaderName.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+    shaderName.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+    shaderName.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+    shaderName.setFloat("pointLights[0].constant", 1.0f);
+    shaderName.setFloat("pointLights[0].linear", 0.09f);
+    shaderName.setFloat("pointLights[0].quadratic", 0.032f);
+    // spotLight
+    shaderName.setVec3("spotLight.position", programState->camera.Position);
+    shaderName.setVec3("spotLight.direction", programState->camera.Front);
+    shaderName.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+    if(spotlight){
+        shaderName.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+        shaderName.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+    }
+    else{
+        shaderName.setVec3("spotLight.diffuse", 0.0f, 0.0f, 0.0f);
+        shaderName.setVec3("spotLight.specular", 0.0f, 0.0f, 0.0f);
+    }
+
+    shaderName.setFloat("spotLight.constant", 1.0f);
+    shaderName.setFloat("spotLight.linear", 0.09f);
+    shaderName.setFloat("spotLight.quadratic", 0.032f);
+    shaderName.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+    shaderName.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 }

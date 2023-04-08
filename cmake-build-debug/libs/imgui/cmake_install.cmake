@@ -1,4 +1,4 @@
-# Install script for directory: /home/matf-racunarska-grafika/Desktop/RG-Projekat/libs/imgui
+# Install script for directory: /home/veljko/Desktop/RG-Projekat/libs/imgui
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
