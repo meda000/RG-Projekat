@@ -32,6 +32,8 @@ unsigned int loadCubemap(vector<std::string> faces);
 
 unsigned int loadTexture(char const * path);
 
+bool blinn = true;
+
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -363,6 +365,9 @@ int main() {
 
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
+        ourShader.setInt("blinn",blinn);
+
+        std::cout << (blinn ? "Blinn-Phong" : "Phong") << std::endl;
 
         // render the loaded models
 
@@ -388,6 +393,7 @@ int main() {
         boxShader.setFloat("material.shininess", 64.0f);
         boxShader.setMat4("projection", projection);
         boxShader.setMat4("view", view);
+        boxShader.setInt("blinn",blinn);
         glBindVertexArray(boxVAO);
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-0.28f, -0.62f, -1.8f));
@@ -545,6 +551,8 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 
     if (key == GLFW_KEY_F && action == GLFW_PRESS)
         spotlight = !spotlight;
+    if (key == GLFW_KEY_B && action == GLFW_PRESS)
+        blinn = !blinn;
 }
 
 unsigned int loadTexture(char const * path)
