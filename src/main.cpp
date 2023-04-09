@@ -34,6 +34,7 @@ unsigned int loadTexture(char const * path);
 
 bool blinn = true;
 
+
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -177,6 +178,7 @@ int main() {
     Shader providnoShader("resources/shaders/providno.vs", "resources/shaders/providno.fs");
     Shader skyboxShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs");
     Shader boxShader("resources/shaders/kutija.vs", "resources/shaders/kutija.fs");
+    Shader starsShader("resources/shaders/stars.vs","resources/shaders/stars.fs");
 
     float skyboxVertices[] = {
             -1.0f,  1.0f, -1.0f,
@@ -294,6 +296,18 @@ int main() {
             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
+
+    float transparentVertices[] = {
+            // positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+            0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+            0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+            1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+            1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+    };
+
     // box VAO
     unsigned int boxVBO, boxVAO;
     glGenVertexArrays(1, &boxVAO);
@@ -310,11 +324,42 @@ int main() {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
+    //transparent
+    unsigned int transparentVAO, transparentVBO;
+    glGenVertexArrays(1, &transparentVAO);
+    glGenBuffers(1, &transparentVBO);
+    glBindVertexArray(transparentVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glBindVertexArray(0);
+
+    vector<glm::vec3> stars
+            {
+                    glm::vec3(-4.8f, 2.7f, 6.3f),
+                    glm::vec3( -1.22f, 2.8f, 5.7f),
+                    glm::vec3( -1.22f, 2.8f, 5.7f),
+                    glm::vec3(3.3f, 2.9f, 2.5f),
+                    glm::vec3( 3.7f, 2.5f, -1.6f),
+                    glm::vec3( 2.7f, 1.2f, -5.0f),
+                    glm::vec3(-4.09, 4.08, -8.62),
+                    glm::vec3(-8.39, 4.96, -7.60),
+                    glm::vec3(-10.02, 5.59, -0.72),
+                    glm::vec3(-10.78, 6.64, 5.49),
+                    glm::vec3(-9.57, 5.40, -8.17),
+                    glm::vec3(-2.60, 4.09, -7.52)
+
+            };
+
     // load textures
     unsigned int greenTexture = loadTexture(FileSystem::getPath("resources/textures/zeleno_providno.png").c_str());
     unsigned int boxDif = loadTexture(FileSystem::getPath("resources/textures/metalDif.jpg").c_str());
     unsigned int boxSpec = loadTexture(FileSystem::getPath("resources/textures/metalSpec.png").c_str());
     unsigned int boxAmb = loadTexture(FileSystem::getPath("resources/textures/metalAmb.png").c_str());
+    unsigned int transparentTexture = loadTexture(FileSystem::getPath("resources/textures/stars.png").c_str());
 
     providnoShader.use();
     providnoShader.setInt("texture1", 0);
@@ -324,6 +369,10 @@ int main() {
     boxShader.setInt("material.diffuse", 1);
     boxShader.setInt("material.specular", 2);
 
+    starsShader.use();
+    starsShader.setInt("texture1", 0);
+
+
     // load models
     // -----------
 //    Model ourModel("resources/objects/backpack/backpack.obj");
@@ -331,6 +380,7 @@ int main() {
 
     Model ostrvo("resources/objects/island/NO7JFUBPJ5S00T2J2UBYCE1F3.obj");
     ostrvo.SetShaderTextureNamePrefix("material.");
+    Model spider ("resources/objects/spider/spider.obj");
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -367,7 +417,7 @@ int main() {
         ourShader.setMat4("view", view);
         ourShader.setInt("blinn",blinn);
 
-        std::cout << (blinn ? "Blinn-Phong" : "Phong") << std::endl;
+        //std::cout << (blinn ? "Blinn-Phong" : "Phong") << std::endl;
 
         // render the loaded models
 
@@ -378,6 +428,13 @@ int main() {
         model = glm::scale(model, glm::vec3(2.0f));
         ourShader.setMat4("model", model);
         ostrvo.Draw(ourShader);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3 (-0.5f, -0.5f, 0.55f));
+        model = glm::rotate(model,glm::radians((float)80),glm::vec3(0.0f,-1.0f,0.0f));
+        model = glm::scale(model, glm::vec3(0.2f));
+        ourShader.setMat4("model", model);
+        spider.Draw(ourShader);
 
         // metalna kutija
         glDisable(GL_CULL_FACE);
@@ -415,7 +472,24 @@ int main() {
         model = glm::scale(model, glm::vec3(5.2f));
         providnoShader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
-        glEnable(GL_CULL_FACE);
+
+        starsShader.use();
+        starsShader.setMat4("projection",projection);
+        starsShader.setMat4("view",view);
+        glBindVertexArray(transparentVAO);
+        glBindTexture(GL_TEXTURE_2D, transparentTexture);
+        for (const glm::vec3& s : stars)
+                {
+                    model = glm::mat4(1.0f);
+                    model = glm::translate(model, s);
+                    model = glm::rotate(model,glm::radians((float)-90),glm::vec3(0.0f,1.0f,0.0f));
+                    model = glm::scale(model,glm::vec3(7.0f));
+                    starsShader.setMat4("model", model);
+                    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+                }
+
+       glEnable(GL_CULL_FACE);
 
         // draw skybox as last
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -553,6 +627,8 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
         spotlight = !spotlight;
     if (key == GLFW_KEY_B && action == GLFW_PRESS)
         blinn = !blinn;
+
+
 }
 
 unsigned int loadTexture(char const * path)
