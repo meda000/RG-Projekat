@@ -24,8 +24,8 @@ Ostale bitne komande:\
 `2`   Bloom\
 `SPACE` Ispisuje koordinate
 
-`E`   Povecavanje exposure-a\
-`Q`   Smanjivanje exposure-a
+`E`   Povecavanje exposure\
+`Q`   Smanjivanje exposure
 
 ---
 ImGui:\
