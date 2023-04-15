@@ -22,7 +22,7 @@ Ostale bitne komande:\
 `F`   Spotlight\
 `1`   HDR\
 `2`   Bloom\
-'SPACE' Ispisuje koordinate
+`SPACE` Ispisuje koordinate
 
 `E`   Povecavanje exposure-a\
 `Q`   Smanjivanje exposure-a
