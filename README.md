@@ -1,11 +1,34 @@
-# project_base
-Prazan projekat sa pratećim bibliotekama koje koristimo na času. 
 
-# Uputstvo
-1. `git clone https://github.com/matf-racunarska-grafika/project_base.git`
-2. CLion -> Open -> path/to/my/project_base
-3. Main se nalazi u src/main.cpp
-4. Cpp fajlovi idu u src folder
-5. Zaglavlja (h i hpp) fajlovi idu u include
-6. Šejderi idu u folder shaders. `Vertex shader` ima ekstenziju `.vs`, `fragment shader` ima ekstenziju `.fs`
-7. ALT+SHIFT+F10 -> project_base -> run
+#Projekat iz racunarske grafike: Ostrvo u kocki
+Koriscen je skelet projekta sa sajta
+
+Implemantirane su sve obavezne teme 1-8
+Od dodatnih tema su implementirane
+
+Grupa A:
+Cubemaps(Skybox)
+
+Grupa B:
+HDR, Bloom
+
+---
+##Uputsvo
+Kamera se krece na komande:\
+'W' 'A' 'S' 'D'\
+Pomeranjem misa rotiramo kameru\
+'ESC' Prekida izvrsavanje programa\
+
+Ostale bitne komande:\
+'B' Blinn\
+'F' Spotlight\
+'1' HDR\
+'2' Bloom\
+'SPACE' Ispisuje koordinate\
+
+`E` Povecavanje exposure-a\
+`Q` Smanjivanje exposure-a\
+---
+ImGui:\
+`F1` otvaranje i zatvaranje ImGui prozora 
+---
+Autor projekta Pavle Medic mi21409
