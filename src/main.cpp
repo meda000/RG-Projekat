@@ -388,6 +388,7 @@ int main() {
     Model ostrvo("resources/objects/island/NO7JFUBPJ5S00T2J2UBYCE1F3.obj");
     ostrvo.SetShaderTextureNamePrefix("material.");
     Model spider ("resources/objects/spider/spider.obj");
+    Model asteroid ("resources/objects/asteroid/R2ED5PKI2NINI4L65Y5WO5OW3.obj");
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -502,6 +503,13 @@ int main() {
         model = glm::scale(model, glm::vec3(0.2f));
         ourShader.setMat4("model", model);
         spider.Draw(ourShader);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3 (0.0f));
+        model = glm::rotate(model,glm::radians((float)80),glm::vec3(0.0f,-1.0f,0.0f));
+        model = glm::scale(model, glm::vec3(200.0f));
+        ourShader.setMat4("model", model);
+        asteroid.Draw(ourShader);
 
         // metalna kutija
         glDisable(GL_CULL_FACE);
