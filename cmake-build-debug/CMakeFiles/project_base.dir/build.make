@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/veljko/Desktop/CLion-2023.1/clion-2023.1/bin/cmake/linux/x64/bin/cmake
+CMAKE_COMMAND = /snap/clion/234/bin/cmake/linux/x64/bin/cmake
 
 # The command to remove a file.
-RM = /home/veljko/Desktop/CLion-2023.1/clion-2023.1/bin/cmake/linux/x64/bin/cmake -E rm -f
+RM = /snap/clion/234/bin/cmake/linux/x64/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/veljko/Desktop/RG-Projekat
+CMAKE_SOURCE_DIR = /home/maja/Desktop/RG-Projekat
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/veljko/Desktop/RG-Projekat/cmake-build-debug
+CMAKE_BINARY_DIR = /home/maja/Desktop/RG-Projekat/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/project_base.dir/depend.make
@@ -70,18 +70,18 @@ include CMakeFiles/project_base.dir/progress.make
 include CMakeFiles/project_base.dir/flags.make
 
 CMakeFiles/project_base.dir/src/main.cpp.o: CMakeFiles/project_base.dir/flags.make
-CMakeFiles/project_base.dir/src/main.cpp.o: /home/veljko/Desktop/RG-Projekat/src/main.cpp
+CMakeFiles/project_base.dir/src/main.cpp.o: /home/maja/Desktop/RG-Projekat/src/main.cpp
 CMakeFiles/project_base.dir/src/main.cpp.o: CMakeFiles/project_base.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/veljko/Desktop/RG-Projekat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/project_base.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_base.dir/src/main.cpp.o -MF CMakeFiles/project_base.dir/src/main.cpp.o.d -o CMakeFiles/project_base.dir/src/main.cpp.o -c /home/veljko/Desktop/RG-Projekat/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/maja/Desktop/RG-Projekat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/project_base.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/project_base.dir/src/main.cpp.o -MF CMakeFiles/project_base.dir/src/main.cpp.o.d -o CMakeFiles/project_base.dir/src/main.cpp.o -c /home/maja/Desktop/RG-Projekat/src/main.cpp
 
 CMakeFiles/project_base.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/project_base.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/veljko/Desktop/RG-Projekat/src/main.cpp > CMakeFiles/project_base.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/maja/Desktop/RG-Projekat/src/main.cpp > CMakeFiles/project_base.dir/src/main.cpp.i
 
 CMakeFiles/project_base.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/project_base.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/veljko/Desktop/RG-Projekat/src/main.cpp -o CMakeFiles/project_base.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/maja/Desktop/RG-Projekat/src/main.cpp -o CMakeFiles/project_base.dir/src/main.cpp.s
 
 # Object files for target project_base
 project_base_OBJECTS = \
@@ -90,21 +90,21 @@ project_base_OBJECTS = \
 # External object files for target project_base
 project_base_EXTERNAL_OBJECTS =
 
-/home/veljko/Desktop/RG-Projekat/project_base: CMakeFiles/project_base.dir/src/main.cpp.o
-/home/veljko/Desktop/RG-Projekat/project_base: CMakeFiles/project_base.dir/build.make
-/home/veljko/Desktop/RG-Projekat/project_base: libs/glad/libglad.a
-/home/veljko/Desktop/RG-Projekat/project_base: /usr/lib/x86_64-linux-gnu/libassimp.so
-/home/veljko/Desktop/RG-Projekat/project_base: libSTB_IMAGE.a
-/home/veljko/Desktop/RG-Projekat/project_base: libs/imgui/libimgui.a
-/home/veljko/Desktop/RG-Projekat/project_base: /usr/lib/x86_64-linux-gnu/libGLX.so
-/home/veljko/Desktop/RG-Projekat/project_base: /usr/lib/x86_64-linux-gnu/libOpenGL.so
-/home/veljko/Desktop/RG-Projekat/project_base: libs/glad/libglad.a
-/home/veljko/Desktop/RG-Projekat/project_base: CMakeFiles/project_base.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/veljko/Desktop/RG-Projekat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/veljko/Desktop/RG-Projekat/project_base"
+/home/maja/Desktop/RG-Projekat/project_base: CMakeFiles/project_base.dir/src/main.cpp.o
+/home/maja/Desktop/RG-Projekat/project_base: CMakeFiles/project_base.dir/build.make
+/home/maja/Desktop/RG-Projekat/project_base: libs/glad/libglad.a
+/home/maja/Desktop/RG-Projekat/project_base: /usr/lib/x86_64-linux-gnu/libassimp.so
+/home/maja/Desktop/RG-Projekat/project_base: libSTB_IMAGE.a
+/home/maja/Desktop/RG-Projekat/project_base: libs/imgui/libimgui.a
+/home/maja/Desktop/RG-Projekat/project_base: /usr/lib/x86_64-linux-gnu/libGLX.so
+/home/maja/Desktop/RG-Projekat/project_base: /usr/lib/x86_64-linux-gnu/libOpenGL.so
+/home/maja/Desktop/RG-Projekat/project_base: libs/glad/libglad.a
+/home/maja/Desktop/RG-Projekat/project_base: CMakeFiles/project_base.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/maja/Desktop/RG-Projekat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable /home/maja/Desktop/RG-Projekat/project_base"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/project_base.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-CMakeFiles/project_base.dir/build: /home/veljko/Desktop/RG-Projekat/project_base
+CMakeFiles/project_base.dir/build: /home/maja/Desktop/RG-Projekat/project_base
 .PHONY : CMakeFiles/project_base.dir/build
 
 CMakeFiles/project_base.dir/clean:
@@ -112,6 +112,6 @@ CMakeFiles/project_base.dir/clean:
 .PHONY : CMakeFiles/project_base.dir/clean
 
 CMakeFiles/project_base.dir/depend:
-	cd /home/veljko/Desktop/RG-Projekat/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/veljko/Desktop/RG-Projekat /home/veljko/Desktop/RG-Projekat /home/veljko/Desktop/RG-Projekat/cmake-build-debug /home/veljko/Desktop/RG-Projekat/cmake-build-debug /home/veljko/Desktop/RG-Projekat/cmake-build-debug/CMakeFiles/project_base.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/maja/Desktop/RG-Projekat/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/maja/Desktop/RG-Projekat /home/maja/Desktop/RG-Projekat /home/maja/Desktop/RG-Projekat/cmake-build-debug /home/maja/Desktop/RG-Projekat/cmake-build-debug /home/maja/Desktop/RG-Projekat/cmake-build-debug/CMakeFiles/project_base.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/project_base.dir/depend
 

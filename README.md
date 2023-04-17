@@ -32,4 +32,5 @@ ImGui:\
 `F1` Otvaranje i zatvaranje ImGui prozora 
 
 ---
+Link snimka: https://drive.google.com/drive/folders/10GeHKXBlgPKhsm6FoFLA1X2GteUx98uj?usp=sharing
 Autor projekta: Pavle Medic mi21409

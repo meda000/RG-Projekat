@@ -64,8 +64,8 @@ struct ProgramState {
     bool ImGuiEnabled = false;
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
-    glm::vec3 backpackPosition = glm::vec3(0.0f);
-    float backpackScale = 15.0f;
+    glm::vec3 islandPosition = glm::vec3(0.0f);
+    float islandScale = 15.0f;
     PointLight pointLight;
     DirLight dirLight;
     SpotLight spotLight;
@@ -186,6 +186,7 @@ int main() {
     Shader starsShader("resources/shaders/stars.vs","resources/shaders/stars.fs");
     Shader hdrShader("resources/shaders/hdr.vs", "resources/shaders/hdr.fs");
     Shader bloomShader("resources/shaders/blur.vs", "resources/shaders/blur.fs");
+    Shader mesecShader("resources/shaders/mesec.vs", "resources/shaders/mesec.fs");
 
     float skyboxVertices[] = {
             -1.0f,  1.0f, -1.0f,
@@ -388,7 +389,7 @@ int main() {
     Model ostrvo("resources/objects/island/NO7JFUBPJ5S00T2J2UBYCE1F3.obj");
     ostrvo.SetShaderTextureNamePrefix("material.");
     Model spider ("resources/objects/spider/spider.obj");
-    Model asteroid ("resources/objects/asteroid/R2ED5PKI2NINI4L65Y5WO5OW3.obj");
+    Model mesec ("resources/objects/mesec/mesec.obj");
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -504,12 +505,16 @@ int main() {
         ourShader.setMat4("model", model);
         spider.Draw(ourShader);
 
+        mesecShader.use();
+        mesecShader.setMat4("projection", projection);
+        mesecShader.setMat4("view", view);
+        mesecShader.setVec3("lightColor", glm::vec3(50.0f, 50.0f, 0.0f));
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3 (0.0f));
+        model = glm::translate(model, glm::vec3 (4.0f, 4.0f, 3.0f));
         model = glm::rotate(model,glm::radians((float)80),glm::vec3(0.0f,-1.0f,0.0f));
-        model = glm::scale(model, glm::vec3(200.0f));
-        ourShader.setMat4("model", model);
-        asteroid.Draw(ourShader);
+        model = glm::scale(model, glm::vec3(1.0f));
+        mesecShader.setMat4("model", model);
+        mesec.Draw(mesecShader);
 
         // metalna kutija
         glDisable(GL_CULL_FACE);
@@ -611,7 +616,7 @@ int main() {
         hdrShader.setFloat("exposure", exposure);
         renderQuad();
 
-       std::cout << "bloom: " << (bloom ? "on" : "off") << "| exposure: " << exposure << std::endl;
+       //std::cout << "bloom: " << (bloom ? "on" : "off") << "| exposure: " << exposure << std::endl;
 
        if (programState->ImGuiEnabled)
            DrawImGui(programState);
@@ -730,9 +735,9 @@ void DrawImGui(ProgramState *programState) {
         ImGui::Begin("Hello window");
         ImGui::Text("Hello text");
         ImGui::SliderFloat("Float slider", &f, 0.0, 1.0);
-        ImGui::ColorEdit3("Background color", (float *) &programState->clearColor);
-        ImGui::DragFloat3("Backpack position", (float*)&programState->backpackPosition);
-        ImGui::DragFloat("Backpack scale", &programState->backpackScale, 0.05, 0.1, 4.0);
+        ImGui::ColorEdit3("Island color", (float *) &programState->clearColor);
+        ImGui::DragFloat3("Island position", (float*)&programState->islandPosition);
+        ImGui::DragFloat("Island scale", &programState->islandScale, 0.05, 0.1, 4.0);
 
         ImGui::DragFloat("pointLight.constant", &programState->pointLight.constant, 0.05, 0.0, 1.0);
         ImGui::DragFloat("pointLight.linear", &programState->pointLight.linear, 0.05, 0.0, 1.0);

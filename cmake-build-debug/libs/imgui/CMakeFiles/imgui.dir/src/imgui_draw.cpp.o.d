@@ -1,8 +1,8 @@
 libs/imgui/CMakeFiles/imgui.dir/src/imgui_draw.cpp.o: \
- /home/veljko/Desktop/RG-Projekat/libs/imgui/src/imgui_draw.cpp \
+ /home/maja/Desktop/RG-Projekat/libs/imgui/src/imgui_draw.cpp \
  /usr/include/stdc-predef.h \
- /home/veljko/Desktop/RG-Projekat/libs/imgui/include/imgui.h \
- /home/veljko/Desktop/RG-Projekat/libs/imgui/include/imconfig.h \
+ /home/maja/Desktop/RG-Projekat/libs/imgui/include/imgui.h \
+ /home/maja/Desktop/RG-Projekat/libs/imgui/include/imconfig.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/float.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h /usr/include/string.h \
@@ -20,7 +20,7 @@ libs/imgui/CMakeFiles/imgui.dir/src/imgui_draw.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
  /usr/include/x86_64-linux-gnu/bits/string_fortified.h \
  /usr/include/assert.h \
- /home/veljko/Desktop/RG-Projekat/libs/imgui/include/imgui_internal.h \
+ /home/maja/Desktop/RG-Projekat/libs/imgui/include/imgui_internal.h \
  /usr/include/stdio.h /usr/include/x86_64-linux-gnu/bits/types.h \
  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
  /usr/include/x86_64-linux-gnu/bits/time64.h \
@@ -89,6 +89,6 @@ libs/imgui/CMakeFiles/imgui.dir/src/imgui_draw.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
- /home/veljko/Desktop/RG-Projekat/libs/imgui/include/imstb_textedit.h \
- /home/veljko/Desktop/RG-Projekat/libs/imgui/include/imstb_rectpack.h \
- /home/veljko/Desktop/RG-Projekat/libs/imgui/include/imstb_truetype.h
+ /home/maja/Desktop/RG-Projekat/libs/imgui/include/imstb_textedit.h \
+ /home/maja/Desktop/RG-Projekat/libs/imgui/include/imstb_rectpack.h \
+ /home/maja/Desktop/RG-Projekat/libs/imgui/include/imstb_truetype.h
